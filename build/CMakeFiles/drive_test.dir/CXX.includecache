@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/MiniPID/MiniPID.h
+
+/home/pi/mecha_proj/drive_test/include/MiniPID/MiniPID.cpp
+MiniPID.h
+/home/pi/mecha_proj/drive_test/include/MiniPID/MiniPID.h
+
+/home/pi/mecha_proj/drive_test/include/MiniPID/MiniPID.h
+
+/home/pi/mecha_proj/drive_test/src/drive_test.cpp
+math.h
+-
+stdio.h
+-
+iostream
+-
+wiringPi.h
+-
+softPwm.h
+-
+MiniPID/MiniPID.h
+/home/pi/mecha_proj/drive_test/src/MiniPID/MiniPID.h
+

@@ -1,0 +1,3 @@
+/home/pi/mecha_proj/drive_test/build/CMakeFiles/edit_cache.dir
+/home/pi/mecha_proj/drive_test/build/CMakeFiles/rebuild_cache.dir
+/home/pi/mecha_proj/drive_test/build/CMakeFiles/drive_test.dir
