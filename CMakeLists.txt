@@ -7,6 +7,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 include_directories(include)
 
 add_executable(drive_test src/drive_test.cpp include/MiniPID/MiniPID.cpp)
-
 target_link_libraries(drive_test wiringPi)
+
+add_executable(old_drive_test src/old_drive_test.cpp include/MiniPID/MiniPID.cpp)
+target_link_libraries(old_drive_test wiringPi)
 

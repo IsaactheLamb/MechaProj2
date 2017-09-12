@@ -13,17 +13,17 @@
 
 using namespace std;
 
-#define PWM_PIN_L1   15
-#define PWM_PIN_L2   -
-#define PWM_PIN_R1   -
-#define PWM_PIN_R2   -
+#define PWM_PIN_L1   6
+#define PWM_PIN_L2   5
+#define PWM_PIN_R1   11
+#define PWM_PIN_R2   10
 
-#define ENC_PIN_L1   16
-#define ENC_PIN_L2   1
-#define ENC_PIN_R1   -
-#define ENC_PIN_R2   -
+#define ENC_PIN_L1   16 
+#define ENC_PIN_L2   15
+#define ENC_PIN_R1   4
+#define ENC_PIN_R2   1
 
-#define ENC_HZ 25
+#define ENC_HZ 50
 
 #define MAX_PWM 4096
 #define MTR_MAX_RPM 85
@@ -45,12 +45,12 @@ float dontcare = 0;
 
 void encISR_L() 
 {
-  ++enc_count_L;
+  ++enc_cnt_L;
 }
 
 void encISR_R() 
 {
-  ++enc_count_R;
+  ++enc_cnt_R;
 }
 
 PI_THREAD (encThread)
@@ -82,7 +82,7 @@ PI_THREAD (encThread)
   }
 }
 
-IMU_THREAD (imuThread)
+PI_THREAD (imuThread)
 {  
   while(1)
   {
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 {
   wiringPiSetup();
   piThreadCreate (encThread); // Start encoder thread
-  piThreadCreate (encThread); // Start IMU thread
+  piThreadCreate (imuThread); // Start IMU thread
 
   double c1_p = 0.02;
   double c1_i = 0;
@@ -130,11 +130,12 @@ int main(int argc, char **argv)
 
 
     // PID tuning
-  double c2_p = 0.02;
+  double c2_p = 0.2;
   double c2_i = 0;
   double c2_d = 0.05;
 
   MiniPID pid_IMU = MiniPID(c2_p, c2_i, c2_d);
+  pid_IMU.setOutputLimits(0, 0.2);
 
   for(;;) 
   {
@@ -144,9 +145,10 @@ int main(int argc, char **argv)
     double out_IMU = pid_IMU.getOutput(angle, 0.0); 
 
     // Multiply by 5 to make unit value at max of 0.2
-    des_rpm_L += 5.0 * out_IMU * DES_MAX_RPM;
-    des_rpm_R += 5.0 * out_IMU * DES_MAX_RPM;
+    des_rpm_L += MAX_PWM*out_IMU /DES_MAX_RPM;
+    des_rpm_R += MAX_PWM*out_IMU /DES_MAX_RPM;
 
+    cout << "Desired RPM LEFT IS          : " << des_rpm_L << endl;
 
     // ******************** DRIVE WHEEL PID CONTROL ********************
     double out_L = pid_L.getOutput(rpm_L, des_rpm_L); // Get delta in PWM
@@ -164,11 +166,22 @@ int main(int argc, char **argv)
     else dir_R = 0;
 
     // Constrain PWM values
-    if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
-    else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
+    if (pwm_val_L > MAX_PWM/10) pwm_val_L = MAX_PWM/10;
+    else if (pwm_val_L < -MAX_PWM/10) pwm_val_L = -MAX_PWM/10;
 
-    if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
-    else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
+    if (pwm_val_R > MAX_PWM/10) pwm_val_R = MAX_PWM/10;
+    else if (pwm_val_R < -MAX_PWM/10) pwm_val_R = -MAX_PWM/10;
+
+    if (des_rpm_L > DES_MAX_RPM) des_rpm_L = DES_MAX_RPM;
+    else if (des_rpm_L < -DES_MAX_RPM) des_rpm_L = -DES_MAX_RPM;
+
+    if (des_rpm_R > DES_MAX_RPM) des_rpm_R = DES_MAX_RPM;
+    else if (des_rpm_R < -DES_MAX_RPM) des_rpm_R = -DES_MAX_RPM;
+
+	cout << "pwm PID           " << out_L << endl;
+	cout << "pwm actual " << pwm_val_L << endl;
+	cout << "pwm commanded       " << dir_L*fabs(pwm_val_L) << endl;
+	cout << "wheel dir L    :  " << dir_L << endl;
 
     // Set PWMs
     softPwmWrite(PWM_PIN_L1, (int) dir_L*fabs(pwm_val_L)); 

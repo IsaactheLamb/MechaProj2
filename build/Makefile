@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named old_drive_test
+
+# Build rule for target.
+old_drive_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 old_drive_test
+.PHONY : old_drive_test
+
+# fast build rule for target.
+old_drive_test/fast:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/build
+.PHONY : old_drive_test/fast
+
+#=============================================================================
 # Target rules for targets named drive_test
 
 # Build rule for target.
@@ -129,6 +142,7 @@ include/MiniPID/MiniPID.o: include/MiniPID/MiniPID.cpp.o
 
 # target to build an object file
 include/MiniPID/MiniPID.cpp.o:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.o
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o
 .PHONY : include/MiniPID/MiniPID.cpp.o
 
@@ -138,6 +152,7 @@ include/MiniPID/MiniPID.i: include/MiniPID/MiniPID.cpp.i
 
 # target to preprocess a source file
 include/MiniPID/MiniPID.cpp.i:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.i
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i
 .PHONY : include/MiniPID/MiniPID.cpp.i
 
@@ -147,6 +162,7 @@ include/MiniPID/MiniPID.s: include/MiniPID/MiniPID.cpp.s
 
 # target to generate assembly for a file
 include/MiniPID/MiniPID.cpp.s:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.s
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s
 .PHONY : include/MiniPID/MiniPID.cpp.s
 
@@ -177,6 +193,33 @@ src/drive_test.cpp.s:
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/src/drive_test.cpp.s
 .PHONY : src/drive_test.cpp.s
 
+src/old_drive_test.o: src/old_drive_test.cpp.o
+
+.PHONY : src/old_drive_test.o
+
+# target to build an object file
+src/old_drive_test.cpp.o:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.o
+.PHONY : src/old_drive_test.cpp.o
+
+src/old_drive_test.i: src/old_drive_test.cpp.i
+
+.PHONY : src/old_drive_test.i
+
+# target to preprocess a source file
+src/old_drive_test.cpp.i:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.i
+.PHONY : src/old_drive_test.cpp.i
+
+src/old_drive_test.s: src/old_drive_test.cpp.s
+
+.PHONY : src/old_drive_test.s
+
+# target to generate assembly for a file
+src/old_drive_test.cpp.s:
+	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.s
+.PHONY : src/old_drive_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -184,6 +227,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... old_drive_test"
 	@echo "... rebuild_cache"
 	@echo "... drive_test"
 	@echo "... include/MiniPID/MiniPID.o"
@@ -192,6 +236,9 @@ help:
 	@echo "... src/drive_test.o"
 	@echo "... src/drive_test.i"
 	@echo "... src/drive_test.s"
+	@echo "... src/old_drive_test.o"
+	@echo "... src/old_drive_test.i"
+	@echo "... src/old_drive_test.s"
 .PHONY : help
 
 

@@ -21,6 +21,14 @@ stdio.h
 -
 iostream
 -
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+fstream
+-
 wiringPi.h
 -
 softPwm.h
