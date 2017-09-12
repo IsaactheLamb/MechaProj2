@@ -89,3 +89,34 @@ int main(int argc, char **argv)
 
   }
 }
+
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <iostream>
+#include <fstream>
+#include <iostream>
+using namespace std;
+
+while(1)
+	    {
+		float angle = 0;
+		float dontcare = 0;
+
+		int result = scanf("%f %f",
+		                   &angle, &dontcare);
+
+		cout << "Angle is " << angle << endl;
+
+		// Read to the end of the line so that we don't get stuck forever on one invalid line.
+		while(getc(stdin) != '\n');
+
+		if (result >= 9)
+		{
+		    break; // Success
+		}
+	    }
+*/
