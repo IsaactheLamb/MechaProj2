@@ -1,6 +1,10 @@
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fstream>
 
 #include <wiringPi.h>
 #include <softPwm.h>
@@ -19,15 +23,25 @@ using namespace std;
 #define ENC_PIN_R1   -
 #define ENC_PIN_R2   -
 
-#define ENC_HZ 50
+#define ENC_HZ 25
 
 #define MAX_PWM 4096
 #define MTR_MAX_RPM 85
+#define DES_MAX_RPM 30
 
 static volatile int enc_cnt_L = 0;
 static volatile int enc_cnt_R = 0;
+
 static volatile float rpm_L = 0;
 static volatile float rpm_R = 0;
+
+// Desired RPM values for each wheel
+static volatile float des_rpm_L = 0.0; 
+static volatile float des_rpm_R = 0.0; 
+
+// Angle tracking
+float angle = 0;
+float dontcare = 0;
 
 void encISR_L() 
 {
@@ -68,27 +82,38 @@ PI_THREAD (encThread)
   }
 }
 
+IMU_THREAD (imuThread)
+{  
+  while(1)
+  {
+	  scanf("%f %f", &angle, &dontcare);
+
+	  cout << "Angle is " << angle << endl;
+
+	  // Read to end of line so don't get stuck on one invalid line.
+	  while(getc(stdin) != '\n');
+  }
+}
+
 int main(int argc, char **argv)
 {
   wiringPiSetup();
   piThreadCreate (encThread); // Start encoder thread
+  piThreadCreate (encThread); // Start IMU thread
 
-  double c_p = 0.02;
-  double c_i = 0;
-  double c_d = 0.05;
+  double c1_p = 0.02;
+  double c1_i = 0;
+  double c1_d = 0.05;
 
   if (argc == 4)
   {
-    c_p = stod(argv[1]);
-    c_i = stod(argv[2]);
-    c_d = stod(argv[3]);
+    c1_p = stod(argv[1]);
+    c1_i = stod(argv[2]);
+    c1_d = stod(argv[3]);
   }
 
-  MiniPID pid_L = MiniPID(c_p, c_i, c_d);
-  MiniPID pid_R = MiniPID(c_p, c_i, c_d);
-
-  float des_rpm_L = 20.0; // Desired RPM values for each wheel
-  float des_rpm_R = 20.0; 
+  MiniPID pid_L = MiniPID(c1_p, c1_i, c1_d);
+  MiniPID pid_R = MiniPID(c1_p, c1_i, c1_d);
 
   float pwm_val_L = 0; // PWM values to write to pins
   float pwm_val_R = 0; 
@@ -102,14 +127,34 @@ int main(int argc, char **argv)
   softPwmCreate (PWM_PIN_R1, 0, MAX_PWM);
   softPwmCreate (PWM_PIN_R2, 0, MAX_PWM);
 
+
+
+    // PID tuning
+  double c2_p = 0.02;
+  double c2_i = 0;
+  double c2_d = 0.05;
+
+  MiniPID pid_IMU = MiniPID(c2_p, c2_i, c2_d);
+
   for(;;) 
   {
+    // *********************** IMU PID CONTROL ***********************
+    // -1 is death, 1 is death
+    // Try keeping between -0.2 and 0.2
+    double out_IMU = pid_IMU.getOutput(angle, 0.0); 
+
+    // Multiply by 5 to make unit value at max of 0.2
+    des_rpm_L += 5.0 * out_IMU * DES_MAX_RPM;
+    des_rpm_R += 5.0 * out_IMU * DES_MAX_RPM;
+
+
+    // ******************** DRIVE WHEEL PID CONTROL ********************
     double out_L = pid_L.getOutput(rpm_L, des_rpm_L); // Get delta in PWM
     double out_R = pid_R.getOutput(rpm_R, des_rpm_R); 
     //cout << "PID Output: " << output << endl; 	
 
-    pwm_val_L += (out_L/MTR_MAX_RPM)*MAX_PWM; // Increment PWM
-    pwm_val_R += (out_R/MTR_MAX_RPM)*MAX_PWM; 
+    pwm_val_L += MAX_PWM*out_L/MTR_MAX_RPM; // Increment PWM
+    pwm_val_R += MAX_PWM*out_R/MTR_MAX_RPM; 
 
     // Set directions
     if (pwm_val_L < 0) dir_L = 1;
@@ -131,40 +176,7 @@ int main(int argc, char **argv)
     softPwmWrite(PWM_PIN_R1, (int) dir_R*fabs(pwm_val_R)); 
     softPwmWrite(PWM_PIN_R2, (int) (!dir_R)*fabs(pwm_val_R));
 
-    //cout << "PWM val: " << pwm_val << endl;
-
     delay(1000.0/ENC_HZ); // Delay to let PID code work its magic
 
   }
 }
-
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <unistd.h>
-#include <iostream>
-#include <fstream>
-#include <iostream>
-using namespace std;
-
-while(1)
-	    {
-		float angle = 0;
-		float dontcare = 0;
-
-		int result = scanf("%f %f",
-		                   &angle, &dontcare);
-
-		cout << "Angle is " << angle << endl;
-
-		// Read to the end of the line so that we don't get stuck forever on one invalid line.
-		while(getc(stdin) != '\n');
-
-		if (result >= 9)
-		{
-		    break; // Success
-		}
-	    }
-*/
