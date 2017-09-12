@@ -9,41 +9,62 @@
 
 using namespace std;
 
-#define PWM_PIN_1 15
-#define ENC_PIN 16
-#define ENC_PIN_2 1
+#define PWM_PIN_L1   15
+#define PWM_PIN_L2   -
+#define PWM_PIN_R1   -
+#define PWM_PIN_R2   -
 
-#define ENC_HZ 10
+#define ENC_PIN_L1   16
+#define ENC_PIN_L2   1
+#define ENC_PIN_R1   -
+#define ENC_PIN_R2   -
 
-#define MAX_PWM 1000
+#define ENC_HZ 50
+
+#define MAX_PWM 4096
 #define MTR_MAX_RPM 85
 
-static volatile int enc_count = 0;
-static volatile float rpm = 0;
+static volatile int enc_cnt_L = 0;
+static volatile int enc_cnt_R = 0;
+static volatile float rpm_L = 0;
+static volatile float rpm_R = 0;
 
-void encISR() 
+void encISR_L() 
 {
-  ++enc_count;
+  ++enc_count_L;
+}
+
+void encISR_R() 
+{
+  ++enc_count_R;
 }
 
 PI_THREAD (encThread)
 {
-  wiringPiISR(ENC_PIN, INT_EDGE_RISING, &encISR);
-  wiringPiISR(ENC_PIN_2, INT_EDGE_RISING, &encISR);
+  // Set up encoder pins for interrupts
+  wiringPiISR(ENC_PIN_L1, INT_EDGE_RISING, &encISR_L);
+  wiringPiISR(ENC_PIN_L2, INT_EDGE_RISING, &encISR_L);
+  wiringPiISR(ENC_PIN_R1, INT_EDGE_RISING, &encISR_R);
+  wiringPiISR(ENC_PIN_R2, INT_EDGE_RISING, &encISR_R);
 
   float del_time = 1.0/((float)ENC_HZ);
   float ppr = 150*6; // Pulses per revolution at output shaft
   
   for (;;)
   {
-    //cout << "Encoder count: " << enc_count << endl;
-    enc_count = 0;
+    // Reset encoder counters
+    enc_cnt_L = 0;
+    enc_cnt_R = 0;
+
     delay(1000.0*del_time); // Delay in ms between readings
 
-    rpm = 60.0*((enc_count/ppr)/del_time);
+    // Calculate RPM of each wheel
+    rpm_L = 60.0*((enc_cnt_L/ppr)/del_time);
+    rpm_R = 60.0*((enc_cnt_R/ppr)/del_time);
 
     //printf("Angular velocity: %.2f rad/s.", ang_vel);
-    cout << "RPM :" << (int) rpm << endl;
+    cout << "RPM Left  :" << (int) rpm_L << endl;
+    cout << "RPM Right :" << (int) rpm_R << endl;
   }
 }
 
@@ -63,25 +84,52 @@ int main(int argc, char **argv)
     c_d = stod(argv[3]);
   }
 
-  MiniPID pid = MiniPID(c_p, c_i, c_d); // TODO tune
+  MiniPID pid_L = MiniPID(c_p, c_i, c_d);
+  MiniPID pid_R = MiniPID(c_p, c_i, c_d);
 
-  float des_rpm = 20.0; // Desired RPM value
-  float pwm_val = 0; // PWM value to write to pin
+  float des_rpm_L = 20.0; // Desired RPM values for each wheel
+  float des_rpm_R = 20.0; 
+
+  float pwm_val_L = 0; // PWM values to write to pins
+  float pwm_val_R = 0; 
+
+  bool dir_L = 0; // Wheel directions
+  bool dir_R = 0;
 
   // pin: GPIO 14, initial val: 0, pwm range: 100 (treating as %)  
-  softPwmCreate (PWM_PIN_1, 0, MAX_PWM) ;
+  softPwmCreate (PWM_PIN_L1, 0, MAX_PWM);
+  softPwmCreate (PWM_PIN_L2, 0, MAX_PWM);
+  softPwmCreate (PWM_PIN_R1, 0, MAX_PWM);
+  softPwmCreate (PWM_PIN_R2, 0, MAX_PWM);
 
   for(;;) 
   {
-    double output = pid.getOutput(rpm, des_rpm); // Get amount to change PWM by
+    double out_L = pid_L.getOutput(rpm_L, des_rpm_L); // Get delta in PWM
+    double out_R = pid_R.getOutput(rpm_R, des_rpm_R); 
     //cout << "PID Output: " << output << endl; 	
 
-    pwm_val += (output/MTR_MAX_RPM)*MAX_PWM; // Increment PWM
+    pwm_val_L += (out_L/MTR_MAX_RPM)*MAX_PWM; // Increment PWM
+    pwm_val_R += (out_R/MTR_MAX_RPM)*MAX_PWM; 
 
-    if (pwm_val > MAX_PWM) pwm_val = MAX_PWM;
-    else if (pwm_val < 0) pwm_val = 0;
+    // Set directions
+    if (pwm_val_L < 0) dir_L = 1;
+    else dir_L = 0;
 
-    softPwmWrite(PWM_PIN_1, (int) pwm_val); // Set PWM
+    if (pwm_val_R < 0) dir_R = 1;
+    else dir_R = 0;
+
+    // Constrain PWM values
+    if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
+    else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
+
+    if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
+    else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
+
+    // Set PWMs
+    softPwmWrite(PWM_PIN_L1, (int) dir_L*fabs(pwm_val_L)); 
+    softPwmWrite(PWM_PIN_L2, (int) (!dir_L)*fabs(pwm_val_L));
+    softPwmWrite(PWM_PIN_R1, (int) dir_R*fabs(pwm_val_R)); 
+    softPwmWrite(PWM_PIN_R2, (int) (!dir_R)*fabs(pwm_val_R));
 
     //cout << "PWM val: " << pwm_val << endl;
 
