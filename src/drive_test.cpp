@@ -23,11 +23,10 @@ using namespace std;
 #define ENC_PIN_R1   4
 #define ENC_PIN_R2   1
 
-#define ENC_HZ 50
+#define ENC_HZ 20
 
 #define MAX_PWM 4096
 #define MTR_MAX_RPM 85
-#define DES_MAX_RPM 30
 
 static volatile int enc_cnt_L = 0;
 static volatile int enc_cnt_R = 0;
@@ -36,12 +35,13 @@ static volatile float rpm_L = 0;
 static volatile float rpm_R = 0;
 
 // Desired RPM values for each wheel
-static volatile float des_rpm_L = 0.0; 
-static volatile float des_rpm_R = 0.0; 
+static volatile float des_rpm = 0.0; 
 
 // Angle tracking
-float angle = 0;
-float dontcare = 0;
+static volatile float angle = 0;
+
+const float loop_del = 1000.0/ENC_HZ;
+const float out_2_in = ((float) MAX_PWM)/MTR_MAX_PWM;
 
 void encISR_L() 
 {
@@ -57,12 +57,14 @@ PI_THREAD (encThread)
 {
   // Set up encoder pins for interrupts
   wiringPiISR(ENC_PIN_L1, INT_EDGE_RISING, &encISR_L);
-  wiringPiISR(ENC_PIN_L2, INT_EDGE_RISING, &encISR_L);
+  //wiringPiISR(ENC_PIN_L2, INT_EDGE_RISING, &encISR_L);
   wiringPiISR(ENC_PIN_R1, INT_EDGE_RISING, &encISR_R);
-  wiringPiISR(ENC_PIN_R2, INT_EDGE_RISING, &encISR_R);
+  //wiringPiISR(ENC_PIN_R2, INT_EDGE_RISING, &encISR_R);
 
   float del_time = 1.0/((float)ENC_HZ);
   float ppr = 150*6; // Pulses per revolution at output shaft
+
+  float coeff = 2.0 * 60.0/(ppr*del_time); // 2x is for only 2 enc pins
   
   for (;;)
   {
@@ -70,11 +72,11 @@ PI_THREAD (encThread)
     enc_cnt_L = 0;
     enc_cnt_R = 0;
 
-    delay(1000.0*del_time); // Delay in ms between readings
+    delay(loop_del); // Delay in ms between readings
 
     // Calculate RPM of each wheel
-    rpm_L = 60.0*((enc_cnt_L/ppr)/del_time);
-    rpm_R = 60.0*((enc_cnt_R/ppr)/del_time);
+    rpm_L = coeff*enc_cnt_L;
+    rpm_R = coeff*enc_cnt_R;
 
     //printf("Angular velocity: %.2f rad/s.", ang_vel);
     cout << "RPM Left  :" << (int) rpm_L << endl;
@@ -86,12 +88,14 @@ PI_THREAD (imuThread)
 {  
   while(1)
   {
-	  scanf("%f %f", &angle, &dontcare);
+	  scanf("%f *", &angle);
 
 	  cout << "Angle is " << angle << endl;
 
 	  // Read to end of line so don't get stuck on one invalid line.
 	  while(getc(stdin) != '\n');
+
+    delay(loop_del);
   }
 }
 
@@ -112,8 +116,7 @@ int main(int argc, char **argv)
     c1_d = stod(argv[3]);
   }
 
-  MiniPID pid_L = MiniPID(c1_p, c1_i, c1_d);
-  MiniPID pid_R = MiniPID(c1_p, c1_i, c1_d);
+  MiniPID pid = MiniPID(c1_p, c1_i, c1_d);
 
   float pwm_val_L = 0; // PWM values to write to pins
   float pwm_val_R = 0; 
@@ -127,61 +130,29 @@ int main(int argc, char **argv)
   softPwmCreate (PWM_PIN_R1, 0, MAX_PWM);
   softPwmCreate (PWM_PIN_R2, 0, MAX_PWM);
 
-
-
-    // PID tuning
-  double c2_p = 0.2;
-  double c2_i = 0;
-  double c2_d = 0.05;
-
-  MiniPID pid_IMU = MiniPID(c2_p, c2_i, c2_d);
-  pid_IMU.setOutputLimits(0, 0.2);
+  double out = 0; // PID output
 
   for(;;) 
   {
     // *********************** IMU PID CONTROL ***********************
-    // -1 is death, 1 is death
-    // Try keeping between -0.2 and 0.2
-    double out_IMU = pid_IMU.getOutput(angle, 0.0); 
-
-    // Multiply by 5 to make unit value at max of 0.2
-    des_rpm_L += MAX_PWM*out_IMU /DES_MAX_RPM;
-    des_rpm_R += MAX_PWM*out_IMU /DES_MAX_RPM;
-
-    cout << "Desired RPM LEFT IS          : " << des_rpm_L << endl;
+    des_rpm = angle*MTR_MAX_RPM;
 
     // ******************** DRIVE WHEEL PID CONTROL ********************
-    double out_L = pid_L.getOutput(rpm_L, des_rpm_L); // Get delta in PWM
-    double out_R = pid_R.getOutput(rpm_R, des_rpm_R); 
-    //cout << "PID Output: " << output << endl; 	
+    double out = pid.getOutput(rpm_L, des_rpm_L); // Get delta in PWM
 
-    pwm_val_L += MAX_PWM*out_L/MTR_MAX_RPM; // Increment PWM
-    pwm_val_R += MAX_PWM*out_R/MTR_MAX_RPM; 
+    pwm_val_L += out_2_in*out; // Increment PWM
+    pwm_val_R += out_2_in*out; 
 
     // Set directions
-    if (pwm_val_L < 0) dir_L = 1;
-    else dir_L = 0;
-
-    if (pwm_val_R < 0) dir_R = 1;
-    else dir_R = 0;
+    dir_L = pwm_val_L < 0;
+    dir_R = pwm_val_R < 0;
 
     // Constrain PWM values
-    if (pwm_val_L > MAX_PWM/10) pwm_val_L = MAX_PWM/10;
-    else if (pwm_val_L < -MAX_PWM/10) pwm_val_L = -MAX_PWM/10;
+    if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
+    else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
 
-    if (pwm_val_R > MAX_PWM/10) pwm_val_R = MAX_PWM/10;
-    else if (pwm_val_R < -MAX_PWM/10) pwm_val_R = -MAX_PWM/10;
-
-    if (des_rpm_L > DES_MAX_RPM) des_rpm_L = DES_MAX_RPM;
-    else if (des_rpm_L < -DES_MAX_RPM) des_rpm_L = -DES_MAX_RPM;
-
-    if (des_rpm_R > DES_MAX_RPM) des_rpm_R = DES_MAX_RPM;
-    else if (des_rpm_R < -DES_MAX_RPM) des_rpm_R = -DES_MAX_RPM;
-
-	cout << "pwm PID           " << out_L << endl;
-	cout << "pwm actual " << pwm_val_L << endl;
-	cout << "pwm commanded       " << dir_L*fabs(pwm_val_L) << endl;
-	cout << "wheel dir L    :  " << dir_L << endl;
+    if (pwm_val_R > MAX_PWM) pwm_val_R = MAX_PWM;
+    else if (pwm_val_R < -MAX_PWM) pwm_val_R = -MAX_PWM;
 
     // Set PWMs
     softPwmWrite(PWM_PIN_L1, (int) dir_L*fabs(pwm_val_L)); 
@@ -189,7 +160,6 @@ int main(int argc, char **argv)
     softPwmWrite(PWM_PIN_R1, (int) dir_R*fabs(pwm_val_R)); 
     softPwmWrite(PWM_PIN_R2, (int) (!dir_R)*fabs(pwm_val_R));
 
-    delay(1000.0/ENC_HZ); // Delay to let PID code work its magic
-
+    delay(loop_del); // Delay to let PID code work its magic
   }
 }
