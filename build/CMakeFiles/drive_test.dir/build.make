@@ -116,6 +116,24 @@ drive_test_EXTERNAL_OBJECTS =
 drive_test: CMakeFiles/drive_test.dir/src/drive_test.cpp.o
 drive_test: CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o
 drive_test: CMakeFiles/drive_test.dir/build.make
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_videostab.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_ts.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_superres.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_stitching.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_ocl.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_gpu.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_contrib.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_photo.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_legacy.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_video.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_objdetect.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_ml.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_calib3d.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_features2d.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_highgui.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_imgproc.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_flann.so.2.4.9
+drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_core.so.2.4.9
 drive_test: CMakeFiles/drive_test.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable drive_test"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/drive_test.dir/link.txt --verbose=$(VERBOSE)

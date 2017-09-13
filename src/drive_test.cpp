@@ -5,6 +5,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <fstream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/core.hpp"
 
  #include <signal.h> 
 #include <sys/types.h>
@@ -14,6 +17,7 @@
 
 #include "MiniPID/MiniPID.h"
 
+using namespace cv;
 using namespace std;
 
 #define PWM_PIN_L1   6
@@ -109,10 +113,71 @@ PI_THREAD (imuThread)
   }
 }
 
-PI_THREAD (imuThread)
+PI_THREAD (VisionThread)
 {  
+	VideoCapture cap(0); //capture the video from web cam
+	if (!cap.isOpened())  // if not success, exit program
+	{
+		cout << "Cannot open the web cam" << endl;
+		
+	}
 
+	
+	vector <Vec3f> v3fCircles;	//3 element vector of floats, this will be the pass by reference output of HoughCircles()
+	
+	namedWindow("Control", CV_WINDOW_AUTOSIZE); //create a window called "Control"
+	
+	int iLowH = 0;		//0
+	int iHighH = 40;	//179
+	
+	int iLowS = 121;	//0
+	int iHighS = 255;	//255
+	
+	int iLowV = 143;	//0
+	int iHighV = 255;	//255
+	
+ 	int X = 0; 
 
+	while (true)
+	{
+		Mat imgOriginal;
+		
+		bool bSuccess = cap.read(imgOriginal); // read a new frame from video
+
+		if (!bSuccess) //if not success, break loop
+		{
+		cout << "Cannot read a frame from video stream" << endl;
+		break;
+		}
+		
+
+		Mat imgHSV;
+		cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
+
+		
+		Mat imgThresholded;
+		inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+
+		//morphological opening (remove small objects from the foreground)
+		erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		dilate(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+		//morphological closing (fill small holes in the foreground)
+		dilate(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+		erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+		
+		GaussianBlur(imgThresholded, imgThresholded, Size(5, 5), 0);	//Blur Effect																						  //fill circles vector with all circles in processed image
+		
+		HoughCircles(imgThresholded, v3fCircles, CV_HOUGH_GRADIENT, 2, imgThresholded.rows / 4, 100, 50, 10, 800);	// alogarithm for detecting circles
+		
+		for (int i = 0; i < v3fCircles.size(); i++)		// for each circle
+		{      
+			X =v3fCircles[i][0] ; 
+			cout <<"                                                	Ball position:\t X = " << X << endl; // x position of center point of circle 
+			
+		}		
+	}
 }
 
 static void myExit(void)
@@ -129,7 +194,7 @@ int main(int argc, char **argv)
   wiringPiSetup();
   piThreadCreate (encThread); // Start encoder thread
   piThreadCreate (imuThread); // Start IMU thread
-
+  piThreadCreate (VisionThread); // Start Vision thread
   atexit(myExit);
 
   double c1_p = 0.02;
