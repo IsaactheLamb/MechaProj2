@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++11   -lwiringPi -lpthread
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/pi/mecha_proj/drive_test/include 
+CXX_INCLUDES = -I/home/pi/mecha_proj/MechaProj2/include 
 
