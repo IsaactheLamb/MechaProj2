@@ -25,8 +25,8 @@ using namespace std;
 #define PWM_PIN_R1   11
 #define PWM_PIN_R2   10
 
-#define ENC_PIN_L1   0
-#define ENC_PIN_L2   7
+#define ENC_PIN_L1   16 
+#define ENC_PIN_L2   15
 #define ENC_PIN_R1   4
 #define ENC_PIN_R2   1
 
@@ -52,9 +52,6 @@ static volatile float angle = 0;
 
 const float loop_del = 1000.0/ENC_HZ;
 const float out_2_in = ((float) MAX_PWM)/MTR_MAX_RPM;
-
-static volatile int X = 0; 
-static volatile int X_prev = 0; 
 
 void encISR_L() 
 {
@@ -93,10 +90,10 @@ PI_THREAD (encThread)
     // Calculate RPM of each wheel
     rpm_L = dirs[dir_L]*coeff*enc_cnt_L;
     rpm_R = dirs[dir_R]*coeff*enc_cnt_R;
-    
+
     //printf("Angular velocity: %.2f rad/s.", ang_vel);
-    cout << "\tRPM Left  :" << (int) rpm_L << endl;
-    cout << "\t\tRPM Right :" << (int) rpm_R << endl;
+    cout << "RPM Left  :" << (int) rpm_L << endl;
+    cout << "RPM Right :" << (int) rpm_R << endl;
   }
 }
 
@@ -105,9 +102,9 @@ PI_THREAD (imuThread)
   while(1)
   {
 	  scanf("%f *", &angle);
-	  angle = angle + 0.08;
+	  angle = angle - 0.025;
 
-	  cout << "\tAngle is " << angle << endl;
+	  cout << "Angle is " << angle << endl;
 
 	  // Read to end of line so don't get stuck on one invalid line.
 	  while(getc(stdin) != '\n');
@@ -124,6 +121,7 @@ PI_THREAD (VisionThread)
 		cout << "Cannot open the web cam" << endl;
 		
 	}
+
 	
 	vector <Vec3f> v3fCircles;	//3 element vector of floats, this will be the pass by reference output of HoughCircles()
 	
@@ -131,10 +129,14 @@ PI_THREAD (VisionThread)
 	
 	int iLowH = 0;		//0
 	int iHighH = 40;	//179
+	
 	int iLowS = 121;	//0
 	int iHighS = 255;	//255
+	
 	int iLowV = 143;	//0
 	int iHighV = 255;	//255
+	
+ 	int X = 0; 
 
 	while (true)
 	{
@@ -165,20 +167,16 @@ PI_THREAD (VisionThread)
 		erode(imgThresholded, imgThresholded, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
 
 		
-		GaussianBlur(imgThresholded, imgThresholded, Size(5, 5), 0);	//Blur Effect																						  fill circles vector with all circles in processed image
+		GaussianBlur(imgThresholded, imgThresholded, Size(5, 5), 0);	//Blur Effect																						  //fill circles vector with all circles in processed image
 		
 		HoughCircles(imgThresholded, v3fCircles, CV_HOUGH_GRADIENT, 2, imgThresholded.rows / 4, 100, 50, 10, 800);	// alogarithm for detecting circles
 		
-    		 X_prev = X;		
-
 		for (int i = 0; i < v3fCircles.size(); i++)		// for each circle
 		{      
 			X =v3fCircles[i][0] ; 
-
-			delay(loop_del);
+			cout <<"                                                	Ball position:\t X = " << X << endl; // x position of center point of circle 
+			
 		}		
-
-		
 	}
 }
 
@@ -196,7 +194,7 @@ int main(int argc, char **argv)
   wiringPiSetup();
   piThreadCreate (encThread); // Start encoder thread
   piThreadCreate (imuThread); // Start IMU thread
-  //piThreadCreate (VisionThread); // Start Vision thread
+  piThreadCreate (VisionThread); // Start Vision thread
   atexit(myExit);
 
   double c1_p = 0.02;
@@ -224,55 +222,26 @@ int main(int argc, char **argv)
 
   double out = 0; // PID output
 
-  // Direction of RPM
-  int dirs[2] = {-1, 1};
-
   for(;;) 
   {
     // *********************** IMU CONTROL ***********************
-    des_rpm = (angle < 0)*(-1)*sqrt(abs(angle))*MTR_MAX_RPM + (angle > 0)*sqrt(abs(angle))*MTR_MAX_RPM;
-    cout << "\tdesired RPM is " << des_rpm << endl;
+    des_rpm = angle*40.0;
+    cout << "desired RPM is " << des_rpm << endl;
 
     // ******************** DRIVE WHEEL PID CONTROL ********************
-    bool force_dir_L = 0;
-    bool force_dir_R = 0;
-
-    //cout <<"\t\t\tBall position: X = " << X << endl; // x position of center point of
-    //cout <<"\t\tBall position: X_prev = " << X_prev << endl; // x position of center point of circle
-
-    if (X != X_prev)
-    {
-	if (X>=320)	// target on the right
-	{
-		force_dir_L =  1;
-	    	force_dir_R =  0;		}
-
-	else	 // target on the left
-	{	force_dir_L =  0;
-	    	force_dir_R =  1;
-	 }
-    }
-   else 
-   {
-	//cout << " RUNNING ELSE CASE &%&%&%&%&%&%&%&%" << endl;
-	force_dir_L = 1;
-	force_dir_R = 1;
-    }
-
-    double out_L = pid_L.getOutput(rpm_L, dirs[force_dir_L]*des_rpm); // Get delta in PWM
-    double out_R = pid_R.getOutput(rpm_R, dirs[force_dir_R]*des_rpm); // Get delta in PWM
+    double out_L = pid_L.getOutput(rpm_L, des_rpm); // Get delta in PWM
+    double out_R = pid_R.getOutput(rpm_R, des_rpm); // Get delta in PWM
 
     pwm_val_L += out_2_in*out_L; // Increment PWM
     pwm_val_R += out_2_in*out_R; 
-
-    
 
     // Set directions
     dir_L = pwm_val_L >= 0;
     dir_R = pwm_val_R >= 0;
 
-    //cout << "\tDir Left is " << dir_L  << "\t\tDir right is " << dir_R << endl;		
-	
+	cout << "Dir Left is " << dir_L << endl;
+	cout << "Dir right is " << dir_R << endl;
+
     // Constrain PWM values
     if (pwm_val_L > MAX_PWM) pwm_val_L = MAX_PWM;
     else if (pwm_val_L < -MAX_PWM) pwm_val_L = -MAX_PWM;
@@ -281,11 +250,7 @@ int main(int argc, char **argv)
     else if (pwm_val_R < -MAX_PWM) pwm_val_R = -MAX_PWM;
 
     cout << "WRITING TO PWMS *******************************************************" << endl;
-    if (abs(angle)>0.5)
-	{
-		pwm_val_L=0;
-		pwm_val_R=0;
-	}
+
     // Set PWMs
     softPwmWrite(PWM_PIN_L1, (int) dir_L*fabs(pwm_val_L)); 
     softPwmWrite(PWM_PIN_L2, (int) (!dir_L)*fabs(pwm_val_L));

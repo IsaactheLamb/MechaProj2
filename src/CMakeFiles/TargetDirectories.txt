@@ -1,0 +1,4 @@
+/home/pi/mecha_proj/MechaProj2/src/CMakeFiles/edit_cache.dir
+/home/pi/mecha_proj/MechaProj2/src/CMakeFiles/old_drive_test.dir
+/home/pi/mecha_proj/MechaProj2/src/CMakeFiles/rebuild_cache.dir
+/home/pi/mecha_proj/MechaProj2/src/CMakeFiles/drive_test.dir
