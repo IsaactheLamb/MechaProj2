@@ -32,7 +32,7 @@ using namespace std;
 
 #define ENC_HZ 50
 
-#define MAX_PWM 100
+#define MAX_PWM 256
 #define MTR_MAX_RPM 110
 
 static volatile int enc_cnt_L = 0;
@@ -139,12 +139,12 @@ int main(int argc, char **argv)
   }
   
   MiniPID pid = MiniPID(c_p, c_i, c_d); // Initialise the PID controller
-  pid.setOutputLimits(50);              // Limit PID output to part of PWM range
+  pid.setOutputLimits(MAX_PWM/2);       // Limit PID output to part of PWM range
 
   double output = 0;   // PID output variable
   double setpoint = 0; // Zero degrees, PID setpoint value
 
-  double deadband = 2;    // PWM values for which we want to clip to zero 
+  double deadband = 5;    // PWM values for which we want to clip to zero 
   double sp_incr = 0.05; // Value to increment setpoint by
 
   float pwm_val_L = 0; // PWM value for left wheel (0 to 100)
