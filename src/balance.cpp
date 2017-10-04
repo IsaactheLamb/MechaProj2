@@ -74,6 +74,7 @@ void encISR_R() {
   ++enc_cnt_R;
 }
 
+/*
 PI_THREAD (encThread)
 {
   // Set up encoder pins for interrupts
@@ -106,10 +107,23 @@ PI_THREAD (encThread)
     cout << "\t\tRPM Right :" << rpm_R << endl;
   }
 }
+*/
+
+PI_THREAD (imuThread)
+{  
+  for(;;)
+  {
+    // **** CAPTURE ANGLE ***********************************************
+    scanf("%f *", &angle);        // Grab angle from stdin
+	  angle = (angle + 0.05)*90;    // Add value to calibrate, convert to degrees
+    while(getc(stdin) != '\n');   // Read to end of line to not get stuck
+  }
+}
 
 int main(int argc, char **argv)
 {
-  wiringPiSetup();            // Initialise wiringPi
+  wiringPiSetup();              // Initialise wiringPi
+  piThreadCreate (imuThread);   // Start IMU angle thread
   //piThreadCreate (encThread); // Start encoder thread
 
   // Set default PID gains
@@ -144,11 +158,6 @@ int main(int argc, char **argv)
 
   for(;;) 
   {
-    // **** CAPTURE ANGLE ***********************************************
-    scanf("%f *", &angle);        // Grab angle from stdin
-	  angle = (angle + 0.05)*90;    // Add value to calibrate, convert to degrees
-    while(getc(stdin) != '\n');   // Read to end of line
-
     // **** PID CONTROL *************************************************
     output = pid.getOutput(angle, setpoint); // Perform PID calculation
 
