@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/mecha_proj/MechaProj2
+CMAKE_SOURCE_DIR = /home/pi/MechaProj2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/mecha_proj/MechaProj2/build
+CMAKE_BINARY_DIR = /home/pi/MechaProj2/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles /home/pi/mecha_proj/MechaProj2/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles /home/pi/MechaProj2/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named old_drive_test
+# Target rules for targets named imu_test
 
 # Build rule for target.
-old_drive_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 old_drive_test
-.PHONY : old_drive_test
+imu_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 imu_test
+.PHONY : imu_test
 
 # fast build rule for target.
-old_drive_test/fast:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/build
-.PHONY : old_drive_test/fast
+imu_test/fast:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/build
+.PHONY : imu_test/fast
+
+#=============================================================================
+# Target rules for targets named balance
+
+# Build rule for target.
+balance: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 balance
+.PHONY : balance
+
+# fast build rule for target.
+balance/fast:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/build
+.PHONY : balance/fast
 
 #=============================================================================
 # Target rules for targets named drive_test
@@ -142,7 +155,7 @@ include/MiniPID/MiniPID.o: include/MiniPID/MiniPID.cpp.o
 
 # target to build an object file
 include/MiniPID/MiniPID.cpp.o:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.o
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/MiniPID/MiniPID.cpp.o
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o
 .PHONY : include/MiniPID/MiniPID.cpp.o
 
@@ -152,7 +165,7 @@ include/MiniPID/MiniPID.i: include/MiniPID/MiniPID.cpp.i
 
 # target to preprocess a source file
 include/MiniPID/MiniPID.cpp.i:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.i
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/MiniPID/MiniPID.cpp.i
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i
 .PHONY : include/MiniPID/MiniPID.cpp.i
 
@@ -162,9 +175,90 @@ include/MiniPID/MiniPID.s: include/MiniPID/MiniPID.cpp.s
 
 # target to generate assembly for a file
 include/MiniPID/MiniPID.cpp.s:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/include/MiniPID/MiniPID.cpp.s
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/MiniPID/MiniPID.cpp.s
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s
 .PHONY : include/MiniPID/MiniPID.cpp.s
+
+include/RPIO/mailbox.o: include/RPIO/mailbox.c.o
+
+.PHONY : include/RPIO/mailbox.o
+
+# target to build an object file
+include/RPIO/mailbox.c.o:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/mailbox.c.o
+.PHONY : include/RPIO/mailbox.c.o
+
+include/RPIO/mailbox.i: include/RPIO/mailbox.c.i
+
+.PHONY : include/RPIO/mailbox.i
+
+# target to preprocess a source file
+include/RPIO/mailbox.c.i:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/mailbox.c.i
+.PHONY : include/RPIO/mailbox.c.i
+
+include/RPIO/mailbox.s: include/RPIO/mailbox.c.s
+
+.PHONY : include/RPIO/mailbox.s
+
+# target to generate assembly for a file
+include/RPIO/mailbox.c.s:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/mailbox.c.s
+.PHONY : include/RPIO/mailbox.c.s
+
+include/RPIO/pwm.o: include/RPIO/pwm.c.o
+
+.PHONY : include/RPIO/pwm.o
+
+# target to build an object file
+include/RPIO/pwm.c.o:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/pwm.c.o
+.PHONY : include/RPIO/pwm.c.o
+
+include/RPIO/pwm.i: include/RPIO/pwm.c.i
+
+.PHONY : include/RPIO/pwm.i
+
+# target to preprocess a source file
+include/RPIO/pwm.c.i:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/pwm.c.i
+.PHONY : include/RPIO/pwm.c.i
+
+include/RPIO/pwm.s: include/RPIO/pwm.c.s
+
+.PHONY : include/RPIO/pwm.s
+
+# target to generate assembly for a file
+include/RPIO/pwm.c.s:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/include/RPIO/pwm.c.s
+.PHONY : include/RPIO/pwm.c.s
+
+src/balance.o: src/balance.cpp.o
+
+.PHONY : src/balance.o
+
+# target to build an object file
+src/balance.cpp.o:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/src/balance.cpp.o
+.PHONY : src/balance.cpp.o
+
+src/balance.i: src/balance.cpp.i
+
+.PHONY : src/balance.i
+
+# target to preprocess a source file
+src/balance.cpp.i:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/src/balance.cpp.i
+.PHONY : src/balance.cpp.i
+
+src/balance.s: src/balance.cpp.s
+
+.PHONY : src/balance.s
+
+# target to generate assembly for a file
+src/balance.cpp.s:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/src/balance.cpp.s
+.PHONY : src/balance.cpp.s
 
 src/drive_test.o: src/drive_test.cpp.o
 
@@ -193,32 +287,32 @@ src/drive_test.cpp.s:
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/src/drive_test.cpp.s
 .PHONY : src/drive_test.cpp.s
 
-src/old_drive_test.o: src/old_drive_test.cpp.o
+src/imu_test.o: src/imu_test.cpp.o
 
-.PHONY : src/old_drive_test.o
+.PHONY : src/imu_test.o
 
 # target to build an object file
-src/old_drive_test.cpp.o:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.o
-.PHONY : src/old_drive_test.cpp.o
+src/imu_test.cpp.o:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/src/imu_test.cpp.o
+.PHONY : src/imu_test.cpp.o
 
-src/old_drive_test.i: src/old_drive_test.cpp.i
+src/imu_test.i: src/imu_test.cpp.i
 
-.PHONY : src/old_drive_test.i
+.PHONY : src/imu_test.i
 
 # target to preprocess a source file
-src/old_drive_test.cpp.i:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.i
-.PHONY : src/old_drive_test.cpp.i
+src/imu_test.cpp.i:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/src/imu_test.cpp.i
+.PHONY : src/imu_test.cpp.i
 
-src/old_drive_test.s: src/old_drive_test.cpp.s
+src/imu_test.s: src/imu_test.cpp.s
 
-.PHONY : src/old_drive_test.s
+.PHONY : src/imu_test.s
 
 # target to generate assembly for a file
-src/old_drive_test.cpp.s:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/src/old_drive_test.cpp.s
-.PHONY : src/old_drive_test.cpp.s
+src/imu_test.cpp.s:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/src/imu_test.cpp.s
+.PHONY : src/imu_test.cpp.s
 
 # Help Target
 help:
@@ -227,18 +321,28 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... old_drive_test"
+	@echo "... imu_test"
+	@echo "... balance"
 	@echo "... rebuild_cache"
 	@echo "... drive_test"
 	@echo "... include/MiniPID/MiniPID.o"
 	@echo "... include/MiniPID/MiniPID.i"
 	@echo "... include/MiniPID/MiniPID.s"
+	@echo "... include/RPIO/mailbox.o"
+	@echo "... include/RPIO/mailbox.i"
+	@echo "... include/RPIO/mailbox.s"
+	@echo "... include/RPIO/pwm.o"
+	@echo "... include/RPIO/pwm.i"
+	@echo "... include/RPIO/pwm.s"
+	@echo "... src/balance.o"
+	@echo "... src/balance.i"
+	@echo "... src/balance.s"
 	@echo "... src/drive_test.o"
 	@echo "... src/drive_test.i"
 	@echo "... src/drive_test.s"
-	@echo "... src/old_drive_test.o"
-	@echo "... src/old_drive_test.i"
-	@echo "... src/old_drive_test.s"
+	@echo "... src/imu_test.o"
+	@echo "... src/imu_test.i"
+	@echo "... src/imu_test.s"
 .PHONY : help
 
 

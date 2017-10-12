@@ -54,45 +54,82 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/mecha_proj/MechaProj2
+CMAKE_SOURCE_DIR = /home/pi/MechaProj2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/mecha_proj/MechaProj2/build
+CMAKE_BINARY_DIR = /home/pi/MechaProj2/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/old_drive_test.dir
+# Target rules for target CMakeFiles/imu_test.dir
 
 # All Build rule for target.
-CMakeFiles/old_drive_test.dir/all:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/depend
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=4,5,6 "Built target old_drive_test"
-.PHONY : CMakeFiles/old_drive_test.dir/all
+CMakeFiles/imu_test.dir/all:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/depend
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=9,10 "Built target imu_test"
+.PHONY : CMakeFiles/imu_test.dir/all
 
 # Include target in all.
-all: CMakeFiles/old_drive_test.dir/all
+all: CMakeFiles/imu_test.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/old_drive_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/old_drive_test.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles 0
-.PHONY : CMakeFiles/old_drive_test.dir/rule
+CMakeFiles/imu_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/imu_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 0
+.PHONY : CMakeFiles/imu_test.dir/rule
 
 # Convenience name for target.
-old_drive_test: CMakeFiles/old_drive_test.dir/rule
+imu_test: CMakeFiles/imu_test.dir/rule
 
-.PHONY : old_drive_test
-
-# clean rule for target.
-CMakeFiles/old_drive_test.dir/clean:
-	$(MAKE) -f CMakeFiles/old_drive_test.dir/build.make CMakeFiles/old_drive_test.dir/clean
-.PHONY : CMakeFiles/old_drive_test.dir/clean
+.PHONY : imu_test
 
 # clean rule for target.
-clean: CMakeFiles/old_drive_test.dir/clean
+CMakeFiles/imu_test.dir/clean:
+	$(MAKE) -f CMakeFiles/imu_test.dir/build.make CMakeFiles/imu_test.dir/clean
+.PHONY : CMakeFiles/imu_test.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/imu_test.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/balance.dir
+
+# All Build rule for target.
+CMakeFiles/balance.dir/all:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/depend
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target balance"
+.PHONY : CMakeFiles/balance.dir/all
+
+# Include target in all.
+all: CMakeFiles/balance.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/balance.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/balance.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 0
+.PHONY : CMakeFiles/balance.dir/rule
+
+# Convenience name for target.
+balance: CMakeFiles/balance.dir/rule
+
+.PHONY : balance
+
+# clean rule for target.
+CMakeFiles/balance.dir/clean:
+	$(MAKE) -f CMakeFiles/balance.dir/build.make CMakeFiles/balance.dir/clean
+.PHONY : CMakeFiles/balance.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/balance.dir/clean
 
 .PHONY : clean
 
@@ -103,7 +140,7 @@ clean: CMakeFiles/old_drive_test.dir/clean
 CMakeFiles/drive_test.dir/all:
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/depend
 	$(MAKE) -f CMakeFiles/drive_test.dir/build.make CMakeFiles/drive_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=1,2,3 "Built target drive_test"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=6,7,8 "Built target drive_test"
 .PHONY : CMakeFiles/drive_test.dir/all
 
 # Include target in all.
@@ -113,9 +150,9 @@ all: CMakeFiles/drive_test.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/drive_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/drive_test.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/mecha_proj/MechaProj2/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/MechaProj2/build/CMakeFiles 0
 .PHONY : CMakeFiles/drive_test.dir/rule
 
 # Convenience name for target.

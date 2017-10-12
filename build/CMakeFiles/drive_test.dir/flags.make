@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++11   -lwiringPi -lpthread
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/include/opencv -I/home/pi/mecha_proj/MechaProj2/include 
+CXX_INCLUDES = -I/usr/include/opencv -I/home/pi/MechaProj2/include 
 

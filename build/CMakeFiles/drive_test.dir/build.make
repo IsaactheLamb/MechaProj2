@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/mecha_proj/MechaProj2
+CMAKE_SOURCE_DIR = /home/pi/MechaProj2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/mecha_proj/MechaProj2/build
+CMAKE_BINARY_DIR = /home/pi/MechaProj2/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/drive_test.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/drive_test.dir/flags.make
 
 CMakeFiles/drive_test.dir/src/drive_test.cpp.o: CMakeFiles/drive_test.dir/flags.make
 CMakeFiles/drive_test.dir/src/drive_test.cpp.o: ../src/drive_test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/drive_test.dir/src/drive_test.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drive_test.dir/src/drive_test.cpp.o -c /home/pi/mecha_proj/MechaProj2/src/drive_test.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/drive_test.dir/src/drive_test.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drive_test.dir/src/drive_test.cpp.o -c /home/pi/MechaProj2/src/drive_test.cpp
 
 CMakeFiles/drive_test.dir/src/drive_test.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/drive_test.dir/src/drive_test.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/mecha_proj/MechaProj2/src/drive_test.cpp > CMakeFiles/drive_test.dir/src/drive_test.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/MechaProj2/src/drive_test.cpp > CMakeFiles/drive_test.dir/src/drive_test.cpp.i
 
 CMakeFiles/drive_test.dir/src/drive_test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/drive_test.dir/src/drive_test.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/mecha_proj/MechaProj2/src/drive_test.cpp -o CMakeFiles/drive_test.dir/src/drive_test.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/MechaProj2/src/drive_test.cpp -o CMakeFiles/drive_test.dir/src/drive_test.cpp.s
 
 CMakeFiles/drive_test.dir/src/drive_test.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/drive_test.dir/src/drive_test.cpp.o.provides.build: CMakeFiles/drive_
 
 CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o: CMakeFiles/drive_test.dir/flags.make
 CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o: ../include/MiniPID/MiniPID.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o -c /home/pi/mecha_proj/MechaProj2/include/MiniPID/MiniPID.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o -c /home/pi/MechaProj2/include/MiniPID/MiniPID.cpp
 
 CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/mecha_proj/MechaProj2/include/MiniPID/MiniPID.cpp > CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/MechaProj2/include/MiniPID/MiniPID.cpp > CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.i
 
 CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/mecha_proj/MechaProj2/include/MiniPID/MiniPID.cpp -o CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/MechaProj2/include/MiniPID/MiniPID.cpp -o CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.s
 
 CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o.requires:
 
@@ -135,7 +135,7 @@ drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_imgproc.so.2.4.9
 drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_flann.so.2.4.9
 drive_test: /usr/lib/arm-linux-gnueabihf/libopencv_core.so.2.4.9
 drive_test: CMakeFiles/drive_test.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/mecha_proj/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable drive_test"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/MechaProj2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable drive_test"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/drive_test.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,6 +153,6 @@ CMakeFiles/drive_test.dir/clean:
 .PHONY : CMakeFiles/drive_test.dir/clean
 
 CMakeFiles/drive_test.dir/depend:
-	cd /home/pi/mecha_proj/MechaProj2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pi/mecha_proj/MechaProj2 /home/pi/mecha_proj/MechaProj2 /home/pi/mecha_proj/MechaProj2/build /home/pi/mecha_proj/MechaProj2/build /home/pi/mecha_proj/MechaProj2/build/CMakeFiles/drive_test.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pi/MechaProj2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pi/MechaProj2 /home/pi/MechaProj2 /home/pi/MechaProj2/build /home/pi/MechaProj2/build /home/pi/MechaProj2/build/CMakeFiles/drive_test.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/drive_test.dir/depend
 

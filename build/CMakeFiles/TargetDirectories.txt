@@ -1,4 +1,5 @@
-/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/edit_cache.dir
-/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/old_drive_test.dir
-/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/rebuild_cache.dir
-/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/drive_test.dir
+/home/pi/MechaProj2/build/CMakeFiles/edit_cache.dir
+/home/pi/MechaProj2/build/CMakeFiles/imu_test.dir
+/home/pi/MechaProj2/build/CMakeFiles/balance.dir
+/home/pi/MechaProj2/build/CMakeFiles/rebuild_cache.dir
+/home/pi/MechaProj2/build/CMakeFiles/drive_test.dir

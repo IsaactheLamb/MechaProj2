@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pi/mecha_proj/MechaProj2/include/MiniPID/MiniPID.cpp" "/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o"
-  "/home/pi/mecha_proj/MechaProj2/src/drive_test.cpp" "/home/pi/mecha_proj/MechaProj2/build/CMakeFiles/drive_test.dir/src/drive_test.cpp.o"
+  "/home/pi/MechaProj2/include/MiniPID/MiniPID.cpp" "/home/pi/MechaProj2/build/CMakeFiles/drive_test.dir/include/MiniPID/MiniPID.cpp.o"
+  "/home/pi/MechaProj2/src/drive_test.cpp" "/home/pi/MechaProj2/build/CMakeFiles/drive_test.dir/src/drive_test.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
