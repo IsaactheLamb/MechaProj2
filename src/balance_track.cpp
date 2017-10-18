@@ -396,6 +396,9 @@ int main(int argc, char **argv)
   float pwm_val_L = 0;  // PWM value for left wheel (0 to 100)
   float pwm_val_R = 0; // PWM value for right wheel (0 to 100)
 
+  double mov_R = 0; 
+  double mov_L = 0; 
+
   // Initialise pins for PWM control of wheels
   softPwmCreate (PWM_PIN_L1, 0, MAX_PWM);
   softPwmCreate (PWM_PIN_L2, 0, MAX_PWM);
@@ -431,30 +434,32 @@ int main(int argc, char **argv)
     }
     
     // **** DIRECTION AND BOUNDARIES ************************************
-    if (X != X_prev) 
-    {
-	if (X <= 256)	// target on the right
+   // if (X != X_prev) 
+   // {
+	if (X <= 300)	
 	{
-	     des_rpm_R = 28;
-             des_rpm_L = 20;
-             //cout << "left" << endl;
+	     mov_R = 30;
+             mov_L = 30;
+             //cout << "straight" << endl;
 	}
-	else if (X >= 384) // target on the left
+	else if (X > 300) 
 	{
-	    des_rpm_R = 20;
-            des_rpm_L = 28;
+	    mov_R = 30;
+            mov_L = 15;
             //cout << "right" << endl;
 	}
+	/*
         else
 	{
 	   des_rpm_R = 24;
            des_rpm_L = 24;
             // cout << "straight" << endl;
 	}
-    }
+	*/
+   // }
 
-        pwm_val_L = pid_L.getOutput(rpm_L, output); //*(MAX_PWM/pid_L.getOutput(0, 100));
-        pwm_val_R = pid_R.getOutput(rpm_R, output);//*(MAX_PWM/pid_R.getOutput(0, 100));
+        pwm_val_L = pid_L.getOutput(rpm_L, output) + mov_L; //*(MAX_PWM/pid_L.getOutput(0, 100));
+        pwm_val_R = pid_R.getOutput(rpm_R, output) + mov_R; //*(MAX_PWM/pid_R.getOutput(0, 100));
 
 	cout << "\t PWM LEFT: " << pwm_val_L << endl;
        cout << "\t PWM RIGHT: " << pwm_val_R << endl;
